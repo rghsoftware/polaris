@@ -1,0 +1,41 @@
+[project]
+name = "polaris"
+version = "0.1.0"
+requires-python = ">=3.12"
+description = "ADHD-friendly project management"
+
+dependencies = [
+  "fastapi>=0.104.0",
+  "uvicorn[standard]>=0.24.0",
+  "sqlalchemy>=2.0.0",
+  "alembic>=1.12.0",
+  "psycopg2-binary>=2.9.0",
+  "redis>=5.0.0",
+  "python-jose[cryptography]>=3.3.0",
+  "passlib[bcrypt]>=1.7.4",
+  "pydantic>=2.5.0",
+  "pydantic-settings>=2.0.0",
+  "python-multipart>=0.0.6",
+  "httpx>=0.25.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=7.4.0",
+  "pytest-asyncio>=0.21.0",
+  "ruff>=0.1.0",
+  "black>=23.0.0",
+  "ipython>=8.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
