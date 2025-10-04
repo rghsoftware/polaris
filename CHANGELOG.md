@@ -4,6 +4,14 @@ All notable changes to the Polaris project will be documented in this file.
 
 ## [Current] - 2025-10-04
 
+### build(railway): migrate from Nixpacks to Dockerfile for deployment
+
+- Add multi-stage Dockerfile with UV package manager support
+- Add .dockerignore to optimize Docker build context
+- Update railway.json to use DOCKERFILE builder instead of NIXPACKS
+- Fix start command to use correct polaris.main:app module path
+- Optimize for production with non-root user and minimal runtime image
+
 ### build(railway): add Railway deployment configuration and dependencies
 
 - Add railway.json with Nixpacks builder configuration
