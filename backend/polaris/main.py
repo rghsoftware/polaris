@@ -16,18 +16,32 @@ Usage:
         $ uvicorn polaris.main:app --reload
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from polaris.api import tasks
 from polaris.models import base
-from polaris.database import engine
+from polaris.database import get_engine
 
-# Initialize database tables at startup
-# Creates all SQLAlchemy model tables if they don't exist
-base.Base.metadata.create_all(bind=engine)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan handler for startup and shutdown events.
+
+    Initializes database tables on startup, ensuring they exist before
+    the application begins serving requests.
+    """
+    # Startup: Initialize database tables
+    base.Base.metadata.create_all(bind=get_engine())
+    yield
+    # Shutdown: cleanup would go here if needed
+
 
 app = FastAPI(
-    title="Polaris", description="ADHD-friendly project management", version="0.1.0"
+    title="Polaris",
+    description="ADHD-friendly project management",
+    version="0.1.0",
+    lifespan=lifespan,
 )
 
 # Configure CORS middleware to allow Flutter app to communicate with the API

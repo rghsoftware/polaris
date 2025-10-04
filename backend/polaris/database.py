@@ -25,19 +25,44 @@ Usage:
 """
 
 from collections.abc import Iterator
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import Session, sessionmaker, DeclarativeBase
 from polaris.config import settings
-
-# Database engine configured from settings
-engine = create_engine(settings.DATABASE_URL)
-
-# Session factory with autocommit disabled for explicit transaction control
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Declarative base for ORM model definitions
 class Base(DeclarativeBase):
     pass
+
+
+# Lazy initialization of database engine and session
+_engine: Engine | None = None
+_SessionLocal: sessionmaker[Session] | None = None
+
+
+def get_engine() -> Engine:
+    """Get or create the SQLAlchemy engine instance.
+
+    Returns:
+        Engine: SQLAlchemy database engine
+    """
+    global _engine
+    if _engine is None:
+        _engine = create_engine(settings.DATABASE_URL)
+    return _engine
+
+
+def get_session_local() -> sessionmaker[Session]:
+    """Get or create the session factory.
+
+    Returns:
+        sessionmaker: SQLAlchemy session factory
+    """
+    global _SessionLocal
+    if _SessionLocal is None:
+        _SessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=get_engine()
+        )
+    return _SessionLocal
 
 
 def get_db() -> Iterator[Session]:
@@ -59,7 +84,7 @@ def get_db() -> Iterator[Session]:
         The session is automatically closed in the finally block, ensuring
         connections are properly released even if an error occurs.
     """
-    db = SessionLocal()
+    db = get_session_local()()
     try:
         yield db
     finally:
