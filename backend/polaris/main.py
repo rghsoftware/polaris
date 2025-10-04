@@ -28,11 +28,17 @@ from polaris.database import get_engine
 async def lifespan(app: FastAPI):
     """Application lifespan handler for startup and shutdown events.
 
-    Initializes database tables on startup, ensuring they exist before
-    the application begins serving requests.
+    Attempts to initialize database tables on startup. If database
+    connection fails, logs a warning but allows app to start for
+    health checks and non-database endpoints.
     """
-    # Startup: Initialize database tables
-    base.Base.metadata.create_all(bind=get_engine())
+    # Startup: Try to initialize database tables
+    try:
+        base.Base.metadata.create_all(bind=get_engine())
+    except Exception as e:
+        # Log warning but don't crash - allows health checks to work
+        print(f"Warning: Could not initialize database: {e}")
+        print("App will start but database-dependent endpoints may fail.")
     yield
     # Shutdown: cleanup would go here if needed
 
