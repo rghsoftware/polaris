@@ -36,7 +36,8 @@ engine = create_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Declarative base for ORM model definitions
-Base = DeclarativeBase()
+class Base(DeclarativeBase):
+    pass
 
 
 def get_db() -> Iterator[Session]:
