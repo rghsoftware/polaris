@@ -31,7 +31,7 @@ env/
 
 # UV Package Manager
 .uv/
-uv.lock
+# uv.lock - committed for reproducible builds
 
 # PyCharm
 .idea/
