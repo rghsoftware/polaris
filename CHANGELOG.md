@@ -2,7 +2,17 @@
 
 All notable changes to the Polaris project will be documented in this file.
 
-## [Current] - 2025-10-03
+## [Current] - 2025-10-04
+
+### build(railway): add Railway deployment configuration and dependencies
+
+- Add railway.json with Nixpacks builder configuration
+- Add .env.example with database, Redis, and secret key templates
+- Move requirements.txt to root for Railway deployment compatibility
+- Configure uvicorn start command for Railway with dynamic port binding
+- Set restart policy with failure handling and max retries
+
+## [2025-10-03]
 
 ### docs: add GNU AGPL v3 license and comprehensive project README
 
